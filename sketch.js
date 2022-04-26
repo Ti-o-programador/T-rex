@@ -1,8 +1,7 @@
 var trex, trex_running, trex_collided;
 var ground, invisibleGround, groundImage;
-
-
-
+var cacto1, cacto2, cacto3, cacto4, cacto5, cacto6;
+var cacto;
 
 var score;
 
@@ -12,8 +11,8 @@ function preload(){
   trex_collided = loadImage("trex_collided.png");
   
   groundImage = loadImage("ground2.png");
-  cloudImage = loadImage("cloud.png")
- 
+  cloudImage = loadImage("cloud.png");
+  cacto1 = loadImage("obstacle1.png");
   
 }
 
@@ -66,6 +65,7 @@ function draw() {
   
   //Gerar Nuvens
   spawnClouds()
+  createCactos();
   
   drawSprites();
 }
@@ -82,6 +82,17 @@ function spawnClouds(){
     trex.depth=trex.depth+1;
   }
   
+}
+
+function createCactos()
+{
+  if(frameCount % 60 === 0){
+    var cacto = createSprite(400,165,10,40);
+    cacto.velocityX = -3;
+    cacto.addImage(cacto1);
+
+
+  }
 }
 
 
