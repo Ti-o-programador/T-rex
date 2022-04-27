@@ -13,6 +13,11 @@ function preload(){
   groundImage = loadImage("ground2.png");
   cloudImage = loadImage("cloud.png");
   cacto1 = loadImage("obstacle1.png");
+  cacto2 = loadImage("obstacle2.png");
+  cacto3 = loadImage("obstacle3.png");
+  cacto4 = loadImage("obstacle4.png");
+  cacto5 = loadImage("obstacle5.png");
+  cacto6 = loadImage("obstacle6.png");
   
 }
 
@@ -23,7 +28,7 @@ function setup() {
   //crie um sprite de trex
   trex = createSprite(50,160,20,50);
   trex.addAnimation("running", trex_running);
-  trex.scale = 0.5;
+  trex.scale = 0.45;
   
   //crie sprite ground (solo)
   ground = createSprite(200,180,400,20);
@@ -86,12 +91,35 @@ function spawnClouds(){
 
 function createCactos()
 {
-  if(frameCount % 60 === 0){
-    var cacto = createSprite(400,165,10,40);
+  if(frameCount % 80 === 0){
+    var cacto = createSprite(600,165,8,20);
     cacto.velocityX = -3;
-    cacto.addImage(cacto1);
-
-
+    
+    var ran = Math.round(random(1,6));
+    switch (ran) {
+      case 1 :
+        cacto.addImage(cacto1);
+        break;
+      case 2 :
+        cacto.addImage(cacto2);
+        break;
+      case 3 :
+        cacto.addImage(cacto3);
+        break;
+      case 4 :
+        cacto.addImage(cacto4);
+        break;
+      case 5 :
+        cacto.addImage(cacto5);
+        break;
+      case 6 :
+        cacto.addImage(cacto6);
+        break;
+    
+      default:
+        break;
+    }
+    cacto.scale = 0.5;
   }
 }
 
