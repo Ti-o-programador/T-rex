@@ -25,7 +25,7 @@ function preload(){
 function setup() {
 
   createCanvas(600,200)
-  
+
   //crie um sprite de trex
   trex = createSprite(50,160,20,50);
   trex.addAnimation("running", trex_running);
@@ -51,28 +51,32 @@ function draw() {
   
   if (gameState === PLAY) {
     ground.velocityX = -4;
-
+    // pulando o trex ao pressionar a tecla de espaço
+    if(keyDown("space")&& trex.y >= 100) {
+      trex.velocityY = -10;
+    }  
+    //garvidade
+    trex.velocityY = trex.velocityY + 0.8
+    
+    if (ground.x < 0){
+      ground.x = ground.width/2;
+    }
+    
+    //impedir que o trex caia
+    trex.collide(invisibleGround);
+    
+    //Gerar Nuvens
+    spawnClouds()
+    createCactos();
+    if (cactoGroup.isTouching(trex)) {       
+      gameState = END;   
+    }  
   } else if (gameState === END) {
     ground.velocityX = 0;
+  
   }
 
-  // pulando o trex ao pressionar a tecla de espaço
-  if(keyDown("space")&& trex.y >= 100) {
-    trex.velocityY = -10;
-  }
   
-  trex.velocityY = trex.velocityY + 0.8
-  
-  if (ground.x < 0){
-    ground.x = ground.width/2;
-  }
-  
-  //impedir que o trex caia
-  trex.collide(invisibleGround);
-  
-  //Gerar Nuvens
-  spawnClouds()
-  createCactos();
   
   drawSprites();
 }
