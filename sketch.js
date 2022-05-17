@@ -2,7 +2,7 @@ var trex, trex_running, trex_collided;
 var ground, invisibleGround, groundImage;
 var cacto1, cacto2, cacto3, cacto4, cacto5, cacto6;
 var cacto, cactoGroup, cloudGroup;
-var score;
+var score = 0;
 
 const PLAY = 1;
 const END = 0;
@@ -23,12 +23,12 @@ function preload(){
 }
 
 function setup() {
-
-  createCanvas(600,200)
+  createCanvas(600, 200);
 
   //crie um sprite de trex
   trex = createSprite(50,160,20,50);
   trex.addAnimation("running", trex_running);
+  trex.setCollider("circle", 0, 0, 40);
   trex.scale = 0.5;
   
   //crie sprite ground (solo)
@@ -48,15 +48,21 @@ function draw() {
   //definir cor do plano de fundo
   background("black");
 
+  // trex.debug = true;
+
+  text("Score: " + score, 500, 50);
   
   if (gameState === PLAY) {
     ground.velocityX = -4;
+    score = score + Math.round(getFrameRate()/60);
+
     // pulando o trex ao pressionar a tecla de espaço
-    if(keyDown("space")&& trex.y >= 100) {
+    if(keyDown("space") && trex.y >= 100) {
       trex.velocityY = -10;
-    }  
-    //garvidade
-    trex.velocityY = trex.velocityY + 0.8
+    }
+    
+    //gravidade
+    trex.velocityY = trex.velocityY + 0.8;
     
     if (ground.x < 0){
       ground.x = ground.width/2;
@@ -68,6 +74,7 @@ function draw() {
     //Gerar Nuvens
     spawnClouds()
     createCactos();
+
     if (cactoGroup.isTouching(trex)) {       
       gameState = END;   
     }  
@@ -83,11 +90,11 @@ function draw() {
 
 
 function spawnClouds(){
- if(frameCount%60===0){
+ if(frameCount % 60 === 0){
     var cloud=createSprite(600,100,40,10);
-    cloud.velocityX=-3;
     cloud.addImage(cloudImage); 
-    cloud.scale=0.6;
+    cloud.velocityX=-3;
+    cloud.scale=0.4;
     cloud.y=Math.round(random(10,60));
     cloud.depth=trex.depth;
     trex.depth=trex.depth+1;
@@ -98,7 +105,7 @@ function spawnClouds(){
 
 function createCactos()
 {
-  if(frameCount % 80 === 0){
+  if(frameCount % 60 === 0){
     var rand = Math.round(random(1, 6));
     var cacto = createSprite(600,165,10,40);
 
@@ -123,11 +130,8 @@ function createCactos()
         break;
     }
 
-    cacto.velocityX = -3;
+    cacto.velocityX = -6;
     cacto.scale = 0.5;
     cactoGroup.add(cacto);
   }
 }
-
-
-
