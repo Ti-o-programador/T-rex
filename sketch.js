@@ -28,6 +28,7 @@ function setup() {
   //crie um sprite de trex
   trex = createSprite(50,160,20,50);
   trex.addAnimation("running", trex_running);
+  trex.addAnimation("collided", trex_collided);
   trex.setCollider("circle", 0, 0, 40);
   trex.scale = 0.5;
   
@@ -80,8 +81,11 @@ function draw() {
     }  
   } else if (gameState === END) {
     ground.velocityX = 0;
-  
-  }
+    trex.velocityY = 0
+    trex.changeAnimation("collided");    
+    cactoGroup.setLifetimeEach(-1);
+    cactoGroup.setVelocityXEach(0)
+  } 
 
   
   
@@ -97,7 +101,8 @@ function spawnClouds(){
     cloud.scale=0.4;
     cloud.y=Math.round(random(10,60));
     cloud.depth=trex.depth;
-    trex.depth=trex.depth+1;
+    //trex.depth=trex.depth+1;
+    cloud.lifetime  = 200
     cloudGroup.add(cloud);
   }
   
@@ -132,6 +137,7 @@ function createCactos()
 
     cacto.velocityX = -6;
     cacto.scale = 0.5;
+    cacto.lifetime = 200;                               
     cactoGroup.add(cacto);
   }
 }
