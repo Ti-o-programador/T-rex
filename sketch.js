@@ -3,6 +3,7 @@ var ground, invisibleGround, groundImage;
 var cacto1, cacto2, cacto3, cacto4, cacto5, cacto6;
 var cacto, cactoGroup, cloudGroup;
 var score = 0;
+var jumpsound, checkpoitsound, diesound;
 
 const PLAY = 1;
 const END = 0;
@@ -20,6 +21,9 @@ function preload(){
   cacto4 = loadImage("obstacle4.png");
   cacto5 = loadImage("obstacle5.png");
   cacto6 = loadImage("obstacle6.png");
+  jumpsound = loadSound("jump.mp3");
+  checkpoitsound = loadSound("checkpoint.mp3");
+  diesound = loadSound("die.mp3");
 }
 
 function setup() {
@@ -29,7 +33,7 @@ function setup() {
   trex = createSprite(50,160,20,50);
   trex.addAnimation("running", trex_running);
   trex.addAnimation("collided", trex_collided);
-  trex.setCollider("circle", 0, 0, 40);
+  trex.setCollider("rectangle", 0, 0, 40, trex.heigth);
   trex.scale = 0.5;
   
   //crie sprite ground (solo)
@@ -54,12 +58,15 @@ function draw() {
   text("Score: " + score, 500, 50);
   
   if (gameState === PLAY) {
-    ground.velocityX = -4;
+    ground.velocityX = -(4 + score/100);
     score = score + Math.round(getFrameRate()/60);
-
+    if (score > 0 && score%100 === 0) {
+      checkpoitsound.play()
+    }
     // pulando o trex ao pressionar a tecla de espaço
     if(keyDown("space") && trex.y >= 100) {
-      trex.velocityY = -10;
+      trex.velocityY = -12;
+      jumpsound.play()
     }
     
     //gravidade
@@ -77,7 +84,10 @@ function draw() {
     createCactos();
 
     if (cactoGroup.isTouching(trex)) {       
-      gameState = END;   
+      //gameState = END;
+      //diesound.play();
+      trex.velocityY = -12;
+      jumpsound.play()
     }  
   } else if (gameState === END) {
     ground.velocityX = 0;
@@ -135,7 +145,7 @@ function createCactos()
         break;
     }
 
-    cacto.velocityX = -6;
+    cacto.velocityX = -(6 + score/100);
     cacto.scale = 0.5;
     cacto.lifetime = 200;                               
     cactoGroup.add(cacto);
