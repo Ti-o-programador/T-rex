@@ -50,16 +50,13 @@ function setup() {
   invisibleGround = createSprite(200,190,400,10);
   invisibleGround.visible = false;
 
-  restart = createSprite(300, 100);
+  restart = createSprite(300, 140);
   restart.addImage(restartImg);
   restart.scale = 0.4;
-  restart.visible = false;
 
   gameOver = createSprite(300, 100);
   gameOver.addImage(gameOverImg);
   gameOver.scale = 0.8;
-  gameOver.visible = false;
-
   cactoGroup = new Group();
   cloudGroup = new Group();
 }
@@ -76,13 +73,18 @@ function draw() {
     ground.velocityX = -(4 + score/100);
     score = score + Math.round(getFrameRate()/60);
     if (score > 0 && score%100 === 0) {
-      checkpoitsound.play()
+      checkpoitsound.play();    
     }
+    
     // pulando o trex ao pressionar a tecla de espaço
-    if(keyDown("space") && trex.y >= 100) {
+    
+    if(keyDown("space") && trex.y >= 150) {
       trex.velocityY = -12;
-      jumpsound.play()
+      jumpsound.play();
     }
+
+    gameOver.visible = false;
+    restart.visible = false;
     
     //gravidade
     trex.velocityY = trex.velocityY + 0.8;
@@ -95,7 +97,7 @@ function draw() {
     trex.collide(invisibleGround);
     
     //Gerar Nuvens
-    spawnClouds()
+    spawnClouds();
     createCactos();
 
     if (cactoGroup.isTouching(trex)) {       
@@ -109,7 +111,14 @@ function draw() {
     trex.velocityY = 0
     trex.changeAnimation("collided");    
     cactoGroup.setLifetimeEach(-1);
-    cactoGroup.setVelocityXEach(0)
+    cactoGroup.setVelocityXEach(0);
+    cloudGroup.setLifetimeEach(-1);
+    cloudGroup.setVelocityXEach(0);
+    restart.visible = true;
+    gameOver.visible = true;
+    if (mousePressedOver(restart)) {
+      reset();
+    }
   } 
 
   
@@ -117,9 +126,12 @@ function draw() {
   drawSprites();
 }
 
-function reset()
-{
-
+function reset() {
+  gameState = PLAY;
+  trex.changeAnimation("running");
+  cactoGroup.destroyEach();
+  cloudGroup.destroyEach();
+  score = 0;
 }
 
 
